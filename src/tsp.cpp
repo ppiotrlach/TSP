@@ -229,7 +229,7 @@ int TSP::branch_and_bound(vector<vector<int>> weight_matrix) //least cost versio
 
         int i = min->vertex; //current vertex number
 
-        if (min->level == matrix_width - 1) //if all cities are visited
+        if (min->level == matrix_width - 1) //if all vertices are visited
         {
             min->path.push_back(i); //back to start_vertex
 
