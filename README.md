@@ -1,1 +1,6 @@
-# TSP-problem---brute-force-least-cost-branch-and-bound
+# TSP
+
+implemented:
+brute force
+branch and bound least cost
+simmulated annealing
