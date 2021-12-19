@@ -13,4 +13,5 @@ public:
 
     int brute_force(Graph graph, int optimum_cost);
     int branch_and_bound(vector<vector<int>> weight_matrix);
+    int simulated_annealing(vector<vector<int>> weight_matrix, int optimum_cost);
 };

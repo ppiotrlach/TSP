@@ -12,7 +12,8 @@ void Graph::set_amount_of_vertices(int amount_of_vertices)
     this->adjency_list = vector<vector<Edge>>(amount_of_vertices);
 }
 
-int Graph::get_amount_of_vertices(){
+int Graph::get_amount_of_vertices()
+{
     return this->amount_of_vertices;
 }
 
@@ -25,8 +26,10 @@ Graph::Graph(int amount_of_vertices)
 
 void Graph::add_edge_to_matrix(int first_vertex, int second_vertex, int edge_weight)
 {
-    if(first_vertex==second_vertex) weight_matrix[first_vertex][second_vertex] = INT32_MAX;
-    else weight_matrix[first_vertex][second_vertex] = edge_weight;
+    if (first_vertex == second_vertex)
+        weight_matrix[first_vertex][second_vertex] = INT32_MAX;
+    else
+        weight_matrix[first_vertex][second_vertex] = edge_weight;
 }
 
 void Graph::add_edge_to_adjency_list(int first_vertex, int second_vertex, int edge_weight)
@@ -77,7 +80,7 @@ vector<vector<int>> Graph::get_weight_matrix()
     return this->weight_matrix;
 }
 
-void Graph::set_weight_matrix(vector<vector<int>>  weight_matrix)
+void Graph::set_weight_matrix(vector<vector<int>> weight_matrix)
 {
     this->weight_matrix = weight_matrix;
 }
@@ -87,6 +90,7 @@ vector<vector<Edge>> Graph::get_adjency_list()
     return this->adjency_list;
 }
 
-int Graph::get_size(){
+int Graph::get_size()
+{
     return this->amount_of_vertices;
 }

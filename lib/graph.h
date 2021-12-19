@@ -57,7 +57,7 @@ public:
     void add_edge_to_matrix(int first_vertex, int second_vertex, int edge_weight);
     void print_weight_matrix();
     std::vector<std::vector<int>> get_weight_matrix();
-    void set_weight_matrix(std::vector<std::vector<int>>  weight_matrix);
+    void set_weight_matrix(std::vector<std::vector<int>> weight_matrix);
 
     //adjency list
     void add_edge_to_adjency_list(int first_vertex, int second_vertex, int edge_weight);
