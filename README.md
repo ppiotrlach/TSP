@@ -10,8 +10,8 @@ running:
 ./tsp arg1 arg2
 ```
 
-arg1 = instance name with extension f.e m6.atsp
-arg2 = methodname:
-br = bruteforce
-bnb = branchandbound
-everything else runs simmulated annealing
+arg1 = instance name with extension f.e m6.atsp <br>
+arg2 = methodname: <br>
+/t br = bruteforce <br>
+/t bnb = branchandbound <br>
+/t everything else runs simmulated annealing <br>
