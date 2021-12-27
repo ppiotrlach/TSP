@@ -4,6 +4,10 @@
 #include "../lib/TSP.h"
 #include <chrono>
 
+
+#include<time.h>					// do mierzenia czasu
+#include<stdlib.h>					// do mierzenia czasu
+
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -96,6 +100,7 @@ int main(int argc, char *argv[])
         cout << chrono::duration_cast<chrono::seconds>(end - begin).count() << "[s]" << endl;
     }
     else if(call_simulated_annealing){
+        // clock_t start;
         begin = chrono::steady_clock::now();
         tsp.simulated_annealing(graph.get_weight_matrix(), optimum_cost);
         end = chrono::steady_clock::now();

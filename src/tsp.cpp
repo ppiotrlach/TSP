@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <queue>
 #include <random>
+#include <chrono>
 
 #define INFINITYY INT32_MAX;
 
@@ -25,8 +26,10 @@ namespace matrix_operations
     {
         for (int i = 0; i < path.size(); i++)
         {
-            if(i == path.size() - 1) cout << path[i] << endl;
-            else cout << path[i] << " —> ";
+            if (i == path.size() - 1)
+                cout << path[i] << endl;
+            else
+                cout << path[i] << " —> ";
         }
     }
 
@@ -287,14 +290,42 @@ vector<int> create_random_path(int number_of_cities)
     return random_path;
 }
 
-int calculate_path_cost(vector<int> path, vector<vector<int>> weight_matrix)
+vector<int> create_nearest_neighbor_path(int number_of_cities, vector<vector<int>> weight_matrix)
+{
+
+    vector<int> nearest_neighbor_path;
+    nearest_neighbor_path.push_back(0);
+    int from = 0;
+
+    while (nearest_neighbor_path.size() < number_of_cities)
+    {
+        int to = 0;
+        int min = INT32_MAX;
+        for (int j = 0; j < number_of_cities; j++)
+        {
+            if (!(find(nearest_neighbor_path.begin(), nearest_neighbor_path.end(), j) != nearest_neighbor_path.end()) && weight_matrix[from][j] < min)
+            {
+                min = weight_matrix[from][j];
+                to = j;
+            }
+        }
+        nearest_neighbor_path.push_back(to);
+        from = to;
+    }
+    nearest_neighbor_path.push_back(0);
+
+    return nearest_neighbor_path;
+}
+
+int calculate_path_cost(vector<int> path, vector<vector<int>> weight_matrix) //calculate first path cost
 {
     int path_cost = 0;
     int next_city = path[0];
 
     for (int i = 0; i < path.size(); i++)
     {
-        if(weight_matrix[next_city][path[i]]!=INT32_MAX){
+        if (weight_matrix[next_city][path[i]] != INT32_MAX)
+        {
             path_cost += weight_matrix[next_city][path[i]];
             //cout << weight_matrix[next_city][path[i]] << endl;
             next_city = path[i];
@@ -305,28 +336,98 @@ int calculate_path_cost(vector<int> path, vector<vector<int>> weight_matrix)
     return path_cost;
 }
 
-int get_random_int(int min, int max){
-    return rand()%(max-min + 1) + min;
+//if we have knowledge about which cities was swaped there is no need to calculate whole cost again
+int calculate_path_cost(int recent_path_cost, vector<int> recent_path, vector<int> current_path, vector<vector<int>> weight_matrix, int first_city_index, int second_city_index)
+{
+    // cout << "---------------------" << endl;
+
+    // matrix_operations::print_path(recent_path);
+    // matrix_operations::print_path(current_path);
+
+    
+    int new_cost;
+    if(first_city_index-second_city_index != -1 && first_city_index-second_city_index != 1)
+    {
+    //     cout << "recent = " << recent_path_cost << endl;
+
+    // cout << " - " << recent_path[first_city_index - 1] << " -> " << recent_path[first_city_index] << " " << weight_matrix[recent_path[first_city_index - 1]][recent_path[first_city_index]] << endl;
+    // cout << " - " << recent_path[first_city_index] << " -> " << recent_path[first_city_index + 1] << " " << weight_matrix[recent_path[first_city_index]][recent_path[first_city_index + 1]] << endl;
+    // cout << " - " << recent_path[second_city_index - 1] << " -> " << recent_path[second_city_index] << " " << weight_matrix[recent_path[second_city_index - 1]][recent_path[second_city_index]] << endl;
+    // cout << " - " << recent_path[second_city_index] << " -> " << recent_path[second_city_index + 1] << " " << weight_matrix[recent_path[second_city_index]][recent_path[second_city_index + 1]] << endl;
+
+    // cout << " + " << current_path[first_city_index - 1] << " -> " << current_path[first_city_index] << " " << weight_matrix[current_path[first_city_index - 1]][current_path[first_city_index]] << endl;
+    // cout << " + " << current_path[first_city_index] << " -> " << current_path[first_city_index + 1] << " " << weight_matrix[current_path[first_city_index]][current_path[first_city_index + 1]] << endl;
+    // cout << " + " << current_path[second_city_index - 1] << " -> " << current_path[second_city_index] << " " << weight_matrix[current_path[second_city_index - 1]][current_path[second_city_index]] << endl;
+    // cout << " + " << current_path[second_city_index] << " -> " << current_path[second_city_index + 1] << " " << weight_matrix[current_path[second_city_index]][current_path[second_city_index + 1]] << endl;
+
+        new_cost =
+            //minus connections beetween old cities
+            recent_path_cost - weight_matrix[recent_path[first_city_index - 1]][recent_path[first_city_index]] - weight_matrix[recent_path[first_city_index]][recent_path[first_city_index + 1]] - weight_matrix[recent_path[second_city_index - 1]][recent_path[second_city_index]] - weight_matrix[recent_path[second_city_index]][recent_path[second_city_index + 1]]
+
+            //plus new connections
+            + weight_matrix[current_path[first_city_index - 1]][current_path[first_city_index]] + weight_matrix[current_path[first_city_index]][current_path[first_city_index + 1]] + weight_matrix[current_path[second_city_index - 1]][current_path[second_city_index]] + weight_matrix[current_path[second_city_index]][current_path[second_city_index + 1]];
+    }
+    else{
+
+    //     cout << "recent = " << recent_path_cost << endl;
+
+    
+    // cout << " - " << recent_path[first_city_index] << " -> " << recent_path[first_city_index + 1] << " " << weight_matrix[recent_path[first_city_index]][recent_path[first_city_index + 1]] << endl;
+    // cout << " - " << recent_path[second_city_index - 1] << " -> " << recent_path[second_city_index] << " " << weight_matrix[recent_path[second_city_index - 1]][recent_path[second_city_index]] << endl;
+    // cout << " - " << recent_path[second_city_index] << " -> " << recent_path[second_city_index + 1] << " " << weight_matrix[recent_path[second_city_index]][recent_path[second_city_index + 1]] << endl;
+
+    
+    // cout << " + " << current_path[first_city_index] << " -> " << current_path[first_city_index + 1] << " " << weight_matrix[current_path[first_city_index]][current_path[first_city_index + 1]] << endl;
+    // cout << " + " << current_path[second_city_index - 1] << " -> " << current_path[second_city_index] << " " << weight_matrix[current_path[second_city_index - 1]][current_path[second_city_index]] << endl;
+    // cout << " + " << current_path[second_city_index] << " -> " << current_path[second_city_index + 1] << " " << weight_matrix[current_path[second_city_index]][current_path[second_city_index + 1]] << endl;
+        new_cost =
+            //minus connections beetween old cities
+            recent_path_cost -  weight_matrix[recent_path[first_city_index]][recent_path[first_city_index + 1]] - weight_matrix[recent_path[second_city_index - 1]][recent_path[second_city_index]] - weight_matrix[recent_path[second_city_index]][recent_path[second_city_index + 1]]
+
+            //plus new connections
+            + weight_matrix[current_path[first_city_index]][current_path[first_city_index + 1]] + weight_matrix[current_path[second_city_index - 1]][current_path[second_city_index]] + weight_matrix[current_path[second_city_index]][current_path[second_city_index + 1]];
+    }
+    return new_cost;
 }
 
-void swap_cities(vector<int> path, int pos1_to_swap, int pos2_to_swap){
+int get_random_int(int min, int max)
+{
+    return rand() % (max - min + 1) + min;
+}
+
+void swap_cities(vector<int> path, int pos1_to_swap, int pos2_to_swap)
+{
     iter_swap(path.begin() + pos1_to_swap, path.begin() + pos2_to_swap);
     matrix_operations::print_path(path);
 }
 
-double get_probability(int current_cost, int bigger_cost, float temperature){
-    int cost_delta = current_cost - bigger_cost; 
-    return exp(cost_delta/temperature);
+double get_probability(int current_cost, int bigger_cost, float temperature)
+{
+    int cost_delta = current_cost - bigger_cost;
+    return exp(cost_delta / temperature);
 }
 
-double get_random_probability(){
+double get_random_probability()
+{
     return ((double)rand() / RAND_MAX);
 }
+
+int TSP::tabu_search(vector<vector<int>> weight_matrix, int optimum_cost)
+{
+
+    return 0;
+}
+
+
 
 int TSP::simulated_annealing(vector<vector<int>> weight_matrix, int optimum_cost)
 {
     srand(time(NULL)); // Seed the time
-    
+
+    chrono::steady_clock::time_point begin, end;
+    int algorithm_duration_time;
+    begin = chrono::steady_clock::now();
+
     int number_of_cities = weight_matrix[0].size();
     int path_cost = 0, new_path_cost = 0;
 
@@ -334,15 +435,12 @@ int TSP::simulated_annealing(vector<vector<int>> weight_matrix, int optimum_cost
     int best_path_iteration_numb = 0;
 
     float temperature = pow(number_of_cities, 3);
-    
-    float cooling_rate = 0.99;
-    if(number_of_cities >= 10 && number_of_cities < 30) cooling_rate = 0.999;
-    if(number_of_cities >= 30 && number_of_cities < 50) cooling_rate = 0.9999;
-    if(number_of_cities >= 50 && number_of_cities < 100) cooling_rate = 0.99999;
-    if(number_of_cities >= 100) cooling_rate = 0.999999;
+    float start_temperature = temperature;
 
-    // cout<< "T = " <<temperature<<endl;
-    vector<int> path = create_random_path(number_of_cities); //create random path, first and last city is always 0
+    float cooling_rate = 0.9999;
+
+    // vector<int> path = create_random_path(number_of_cities); //create random path, first and last city is always 0
+    vector<int> path = create_nearest_neighbor_path(number_of_cities, weight_matrix);
     vector<int> temp_path = path;
     //matrix_operations::print_path(path);
     vector<int> best_path = path;
@@ -357,63 +455,93 @@ int TSP::simulated_annealing(vector<vector<int>> weight_matrix, int optimum_cost
 
     int no_improvement_iteration_counter = 0;
 
-    while(temperature > 0.001){
+    while (temperature > 0.001 && algorithm_duration_time < 60)
+    {
+        temp_path = path; //!!!!!
+
         iteration_counter++;
-        // temperature = temperature - 1/iteration_counter;
-        temperature *= cooling_rate;
-        int pos1_to_swap = get_random_int(1, number_of_cities-1);
-        int pos2_to_swap = get_random_int(1, number_of_cities-1);
 
-        while(pos1_to_swap == pos2_to_swap){
-            pos2_to_swap = get_random_int(1, number_of_cities-1);
+
+        if (iteration_counter % 100 == 0)
+        {
+            temperature = start_temperature * cooling_rate;
+            start_temperature = temperature;
         }
-        
+
+        int pos1_to_swap = get_random_int(1, number_of_cities - 2);
+        int pos2_to_swap = get_random_int(1, number_of_cities - 2);
+
+        while (pos1_to_swap == pos2_to_swap)
+        {
+            pos2_to_swap = get_random_int(1, number_of_cities - 2);
+        }
+
         iter_swap(temp_path.begin() + pos1_to_swap, temp_path.begin() + pos2_to_swap); //swap cities in vector
-        //matrix_operations::print_path(temp_path);
+        // matrix_operations::print_path(temp_path);
+
         new_path_cost = calculate_path_cost(temp_path, weight_matrix);
-        //cout<<new_path_cost<<endl;
+        // cout << "oldMethod = " << new_path_cost << endl
+        //      << endl;
+        // new_path_cost = calculate_path_cost(path_cost, path, temp_path, weight_matrix, pos1_to_swap, pos2_to_swap);
+        // cout << "newMethod = " << new_path_cost << endl<< endl;
 
+        // if(iteration_counter > 4 )break;
 
-        if(new_path_cost < path_cost){
+        if (new_path_cost < path_cost)
+        {
             path = temp_path;
             path_cost = new_path_cost;
-            
-            PRD = (float)(path_cost - optimum_cost) * 100 / optimum_cost;
+
             // printf("%d\t%d\t%.2f%%\t%.4f \n",iteration_counter, path_cost, PRD, temperature);
-            printf("%d\t%d\t%.2f%%\t\n",iteration_counter, path_cost, PRD);
-            if(best_path_cost > path_cost){
+
+            if (best_path_cost > path_cost)
+            {
                 best_path_cost = path_cost;
                 best_path = path;
                 best_path_iteration_numb = iteration_counter;
-            }
 
-            no_improvement_iteration_counter = 0;
+                PRD = (float)(path_cost - optimum_cost) * 100 / optimum_cost;
+                printf("%d\t%d\t%.2f%%\t\n", iteration_counter, path_cost, PRD);
+
+                no_improvement_iteration_counter = 0;
+            }
             //cout<<"new path cost = " << path_cost<< endl<<"new path = ";
             //matrix_operations::print_path(path);
         }
-        else if(new_path_cost > path_cost){
-            if(get_random_probability() < get_probability(path_cost, new_path_cost, temperature)){
+        else if (new_path_cost >= path_cost)
+        { 
+            double rand_prob = get_random_probability();
+            double prob = get_probability(path_cost, new_path_cost, temperature);
+            // cout << rand_prob << "\t" << prob << endl;
+            if (rand_prob <= prob)
+            {
                 path = temp_path;
                 path_cost = new_path_cost;
-                no_improvement_iteration_counter++;
             }
+            no_improvement_iteration_counter++;
         }
-        else no_improvement_iteration_counter++;
 
-        if(no_improvement_iteration_counter > pow(number_of_cities, 3)){
+        if (no_improvement_iteration_counter > pow(number_of_cities, 2) * 10000)
+        {
             path = create_random_path(number_of_cities); //shuffle
             no_improvement_iteration_counter = 0;
-            cout<<"path shuffled"<<endl;
+            cout << "path shuffled" << endl;
+            //matrix_operations::print_path(temp_path);
         }
+        end = chrono::steady_clock::now();
+        algorithm_duration_time = chrono::duration_cast<chrono::seconds>(end - begin).count();
     }
 
-    if(best_path_cost < path_cost){
+    if (best_path_cost < path_cost)
+    {
         PRD = (float)(best_path_cost - optimum_cost) * 100 / optimum_cost;
-        printf("%d\t%d\t%.2f%% best path found before  \n",best_path_iteration_numb, best_path_cost, PRD);
+        printf("%d\t%d\t%.2f%% best path found before  \n", best_path_iteration_numb, best_path_cost, PRD);
     }
 
+    cout << "IT = " << iteration_counter << endl;
     PRD = (float)(first_path_cost - optimum_cost) * 100 / optimum_cost;
     printf("0\t%d\t%.2f%% \n\n", first_path_cost, PRD);
     matrix_operations::print_path(path);
     return path_cost;
 }
+
