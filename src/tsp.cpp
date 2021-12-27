@@ -551,3 +551,54 @@ int TSP::simulated_annealing(vector<vector<int>> weight_matrix, int optimum_cost
     matrix_operations::print_path(path);
     return path_cost;
 }
+
+vector<vector<int>> create_tabu_matrix(int number_of_cities){
+    vector<vector<int> > matrix(number_of_cities);
+    for (int i = 0 ; i <  number_of_cities ; i++ )
+        matrix[i].resize(number_of_cities);
+}
+
+int TSP::tabu_search(vector<vector<int>> weight_matrix, int optimum_cost){
+
+    srand(time(NULL)); // Seed the time
+
+    chrono::steady_clock::time_point begin, end;
+    int algorithm_duration_time;
+    begin = chrono::steady_clock::now();
+
+    int number_of_cities = weight_matrix[0].size();
+    int path_cost = 0, new_path_cost = 0;
+
+    int iteration_counter = 0;
+    int best_path_iteration_numb = 0;
+
+
+    // vector<int> path = create_random_path(number_of_cities); //create random path, first and last city is always 0
+    vector<int> path = create_nearest_neighbor_path(number_of_cities, weight_matrix);
+    vector<int> temp_path = path;
+
+    vector<int> best_path = path;
+    path_cost = calculate_path_cost(path, weight_matrix);
+
+
+    int first_path_cost = path_cost;
+    int best_path_cost = path_cost;
+
+    int no_improvement_iteration_counter = 0;
+
+
+    vector<vector<int>> tabu_matrix = create_tabu_matrix(number_of_cities);
+
+
+
+    while (algorithm_duration_time < 60)
+    {
+      
+        end = chrono::steady_clock::now();
+        algorithm_duration_time = chrono::duration_cast<chrono::seconds>(end - begin).count();
+    }
+
+
+    matrix_operations::print_path(path);
+    return path_cost;
+}
