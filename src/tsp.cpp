@@ -339,7 +339,8 @@ int calculate_path_cost(vector<int> path, vector<vector<int>> weight_matrix) //c
 //if we have knowledge about which cities was swaped there is no need to calculate whole cost again
 int calculate_path_cost(int recent_path_cost, vector<int> recent_path, vector<int> current_path, vector<vector<int>> weight_matrix, int first_city_index, int second_city_index)
 {
-    if(first_city_index > second_city_index){
+    if (first_city_index > second_city_index)
+    {
         int buff = first_city_index;
         first_city_index = second_city_index;
         second_city_index = buff;
@@ -365,24 +366,24 @@ int calculate_path_cost(int recent_path_cost, vector<int> recent_path, vector<in
         // cout << " + " << current_path[second_city_index] << " -> " << current_path[second_city_index + 1] << " " << weight_matrix[current_path[second_city_index]][current_path[second_city_index + 1]] << endl;
         new_cost =
             //minus connections beetween old cities
-            recent_path_cost - weight_matrix[recent_path[first_city_index-1]][recent_path[first_city_index]] - weight_matrix[recent_path[second_city_index - 1]][recent_path[second_city_index]] - weight_matrix[recent_path[second_city_index]][recent_path[second_city_index + 1]]
+            recent_path_cost - weight_matrix[recent_path[first_city_index - 1]][recent_path[first_city_index]] - weight_matrix[recent_path[second_city_index - 1]][recent_path[second_city_index]] - weight_matrix[recent_path[second_city_index]][recent_path[second_city_index + 1]]
 
             //plus new connections
-            + weight_matrix[current_path[first_city_index-1]][current_path[first_city_index]] + weight_matrix[current_path[second_city_index - 1]][current_path[second_city_index]] + weight_matrix[current_path[second_city_index]][current_path[second_city_index + 1]];
+            + weight_matrix[current_path[first_city_index - 1]][current_path[first_city_index]] + weight_matrix[current_path[second_city_index - 1]][current_path[second_city_index]] + weight_matrix[current_path[second_city_index]][current_path[second_city_index + 1]];
     }
     else
     {
-    //     cout << "recent = " << recent_path_cost << endl;
+        //     cout << "recent = " << recent_path_cost << endl;
 
-    //     cout << " - " << recent_path[first_city_index - 1] << " -> " << recent_path[first_city_index] << " " << weight_matrix[recent_path[first_city_index - 1]][recent_path[first_city_index]] << endl;
-    //     cout << " - " << recent_path[first_city_index] << " -> " << recent_path[first_city_index + 1] << " " << weight_matrix[recent_path[first_city_index]][recent_path[first_city_index + 1]] << endl;
-    //     cout << " - " << recent_path[second_city_index - 1] << " -> " << recent_path[second_city_index] << " " << weight_matrix[recent_path[second_city_index - 1]][recent_path[second_city_index]] << endl;
-    //     cout << " - " << recent_path[second_city_index] << " -> " << recent_path[second_city_index + 1] << " " << weight_matrix[recent_path[second_city_index]][recent_path[second_city_index + 1]] << endl;
+        //     cout << " - " << recent_path[first_city_index - 1] << " -> " << recent_path[first_city_index] << " " << weight_matrix[recent_path[first_city_index - 1]][recent_path[first_city_index]] << endl;
+        //     cout << " - " << recent_path[first_city_index] << " -> " << recent_path[first_city_index + 1] << " " << weight_matrix[recent_path[first_city_index]][recent_path[first_city_index + 1]] << endl;
+        //     cout << " - " << recent_path[second_city_index - 1] << " -> " << recent_path[second_city_index] << " " << weight_matrix[recent_path[second_city_index - 1]][recent_path[second_city_index]] << endl;
+        //     cout << " - " << recent_path[second_city_index] << " -> " << recent_path[second_city_index + 1] << " " << weight_matrix[recent_path[second_city_index]][recent_path[second_city_index + 1]] << endl;
 
-    //     cout << " + " << current_path[first_city_index - 1] << " -> " << current_path[first_city_index] << " " << weight_matrix[current_path[first_city_index - 1]][current_path[first_city_index]] << endl;
-    //     cout << " + " << current_path[first_city_index] << " -> " << current_path[first_city_index + 1] << " " << weight_matrix[current_path[first_city_index]][current_path[first_city_index + 1]] << endl;
-    //     cout << " + " << current_path[second_city_index - 1] << " -> " << current_path[second_city_index] << " " << weight_matrix[current_path[second_city_index - 1]][current_path[second_city_index]] << endl;
-    //     cout << " + " << current_path[second_city_index] << " -> " << current_path[second_city_index + 1] << " " << weight_matrix[current_path[second_city_index]][current_path[second_city_index + 1]] << endl;
+        //     cout << " + " << current_path[first_city_index - 1] << " -> " << current_path[first_city_index] << " " << weight_matrix[current_path[first_city_index - 1]][current_path[first_city_index]] << endl;
+        //     cout << " + " << current_path[first_city_index] << " -> " << current_path[first_city_index + 1] << " " << weight_matrix[current_path[first_city_index]][current_path[first_city_index + 1]] << endl;
+        //     cout << " + " << current_path[second_city_index - 1] << " -> " << current_path[second_city_index] << " " << weight_matrix[current_path[second_city_index - 1]][current_path[second_city_index]] << endl;
+        //     cout << " + " << current_path[second_city_index] << " -> " << current_path[second_city_index + 1] << " " << weight_matrix[current_path[second_city_index]][current_path[second_city_index + 1]] << endl;
 
         new_cost =
             //minus connections beetween old cities
@@ -390,11 +391,6 @@ int calculate_path_cost(int recent_path_cost, vector<int> recent_path, vector<in
 
             //plus new connections
             + weight_matrix[current_path[first_city_index - 1]][current_path[first_city_index]] + weight_matrix[current_path[first_city_index]][current_path[first_city_index + 1]] + weight_matrix[current_path[second_city_index - 1]][current_path[second_city_index]] + weight_matrix[current_path[second_city_index]][current_path[second_city_index + 1]];
-
-
-
-
-        
     }
     return new_cost;
 }
@@ -421,12 +417,6 @@ double get_random_probability()
     return ((double)rand() / RAND_MAX);
 }
 
-int TSP::tabu_search(vector<vector<int>> weight_matrix, int optimum_cost)
-{
-
-    return 0;
-}
-
 int TSP::simulated_annealing(vector<vector<int>> weight_matrix, int optimum_cost)
 {
     srand(time(NULL)); // Seed the time
@@ -446,8 +436,8 @@ int TSP::simulated_annealing(vector<vector<int>> weight_matrix, int optimum_cost
 
     float cooling_rate = 0.9999;
 
-    // vector<int> path = create_random_path(number_of_cities); //create random path, first and last city is always 0
-    vector<int> path = create_nearest_neighbor_path(number_of_cities, weight_matrix);
+    vector<int> path = create_random_path(number_of_cities); //create random path, first and last city is always 0
+    // vector<int> path = create_nearest_neighbor_path(number_of_cities, weight_matrix);
     vector<int> temp_path = path;
     //matrix_operations::print_path(path);
     vector<int> best_path = path;
@@ -552,18 +542,98 @@ int TSP::simulated_annealing(vector<vector<int>> weight_matrix, int optimum_cost
     return path_cost;
 }
 
-vector<vector<int>> create_tabu_matrix(int number_of_cities){
-    vector<vector<int> > matrix(number_of_cities);
-    for (int i = 0 ; i <  number_of_cities ; i++ )
-        matrix[i].resize(number_of_cities);
+vector<vector<int>> create_empty_matrix(int width)
+{
+    vector<vector<int>> matrix(width);
+
+    for (int i = 0; i < width; i++)
+        matrix[i].resize(width);
+
+    return matrix;
 }
 
-int TSP::tabu_search(vector<vector<int>> weight_matrix, int optimum_cost){
+void print_matrix(vector<vector<int>> matrix)
+{
+    for (int i = 0; i < matrix.size(); i++)
+    {
+        for (int j = 0; j < matrix.size(); j++)
+        {
+            cout << matrix[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+struct Move
+{
+    int first_position = -1;
+    int second_position = -1;
+    int progress = 0;
+};
+
+//TODO eliminate same pair of cities
+vector<Move> find_best_moves(int number_of_moves_to_check, vector<int> current_path, vector<vector<int>> weight_matrix, int current_path_cost)
+{
+    int number_of_cities = weight_matrix[0].size();
+    vector<Move> best_moves(number_of_moves_to_check);
+    vector<int> temp_path;
+
+    int new_path_cost = -1;
+    int progress = INT32_MAX;
+
+    for (int i = 0; i < number_of_moves_to_check; i++)
+    {
+        Move temp_move;
+        temp_path = current_path;
+
+        int pos1_to_swap = get_random_int(1, number_of_cities - 2);
+        int pos2_to_swap = get_random_int(1, number_of_cities - 2);
+
+        while (pos1_to_swap == pos2_to_swap)
+        {
+            pos2_to_swap = get_random_int(1, number_of_cities - 2);
+        }
+
+        iter_swap(temp_path.begin() + pos1_to_swap, temp_path.begin() + pos2_to_swap); //swap cities in vector
+
+        // new_path_cost = calculate_path_cost(current_path_cost, current_path, temp_path, weight_matrix, pos1_to_swap, pos2_to_swap);
+        new_path_cost = calculate_path_cost(temp_path, weight_matrix);
+
+        progress = current_path_cost - new_path_cost;
+
+        if (pos1_to_swap > pos2_to_swap)
+        {
+            int buff = pos1_to_swap;
+            pos1_to_swap = pos2_to_swap;
+            pos2_to_swap = buff;
+        }
+
+        temp_move.first_position = pos1_to_swap;
+        temp_move.second_position = pos2_to_swap;
+        temp_move.progress = progress;
+
+        best_moves[i] = temp_move;
+    }
+
+    sort(best_moves.begin(), best_moves.end(), [](const Move &lhs, const Move &rhs)
+         { return lhs.progress > rhs.progress; });
+
+    return best_moves;
+}
+
+void print_moves(vector<Move> moves)
+{
+    for (int i = 0; i < moves.size(); i++)
+        cout << moves[i].first_position << " : " << moves[i].second_position << " progress = " << moves[i].progress << endl;
+}
+
+int TSP::tabu_search(vector<vector<int>> weight_matrix, int optimum_cost)
+{
 
     srand(time(NULL)); // Seed the time
 
     chrono::steady_clock::time_point begin, end;
-    int algorithm_duration_time;
+    int algorithm_duration_time = 0;
     begin = chrono::steady_clock::now();
 
     int number_of_cities = weight_matrix[0].size();
@@ -572,7 +642,6 @@ int TSP::tabu_search(vector<vector<int>> weight_matrix, int optimum_cost){
     int iteration_counter = 0;
     int best_path_iteration_numb = 0;
 
-
     // vector<int> path = create_random_path(number_of_cities); //create random path, first and last city is always 0
     vector<int> path = create_nearest_neighbor_path(number_of_cities, weight_matrix);
     vector<int> temp_path = path;
@@ -580,25 +649,129 @@ int TSP::tabu_search(vector<vector<int>> weight_matrix, int optimum_cost){
     vector<int> best_path = path;
     path_cost = calculate_path_cost(path, weight_matrix);
 
+    cout << "1st path cost = " << path_cost << endl;
 
     int first_path_cost = path_cost;
     int best_path_cost = path_cost;
+    int temp_path_cost = path_cost;
 
     int no_improvement_iteration_counter = 0;
 
+    int number_of_moves_to_check = number_of_cities*3;
 
-    vector<vector<int>> tabu_matrix = create_tabu_matrix(number_of_cities);
+    int tabu_tenure = number_of_cities / 2;
 
+    vector<vector<int>> tabu_matrix = create_empty_matrix(number_of_cities);
 
+    vector<Move> best_moves;
+
+    float PRD = -1;
+
+    bool is_progress_in_iteration = false;
 
     while (algorithm_duration_time < 60)
     {
-      
+        is_progress_in_iteration = false;
+        // cout << "----------" << iteration_counter << " iteration_counter " << endl // DEBUG
+        iteration_counter++;
+        temp_path = path;
+
+        best_moves = find_best_moves(number_of_moves_to_check, temp_path, weight_matrix, path_cost); //(int number_of_moves_to_check, vector<int> path, vector<vector<int>> weight_matrix, int current_path_cost)
+        // cout << endl;
+        // print_moves(best_moves);  //DEBUG
+        // cout << endl;
+
+        // matrix_operations::print_path(temp_path);
+
+        for (int i = 0; i < number_of_cities; i++)
+        {
+            for (int j = 0; j < number_of_cities; j++)
+            {
+                if (tabu_matrix[i][j] > 0)
+                {
+                    tabu_matrix[i][j]--;
+                    // cout << "decreasing" << endl;
+                }
+            }
+        }
+
+        for (int i = 0; i < number_of_moves_to_check; i++)
+        {
+            if (best_path_cost > (temp_path_cost - best_moves[i].progress))
+            {
+                is_progress_in_iteration = true;
+                tabu_matrix[best_moves[i].second_position][best_moves[i].first_position] = tabu_tenure;
+                tabu_matrix[best_moves[i].first_position][best_moves[i].second_position] = tabu_tenure;
+
+                iter_swap(temp_path.begin() + best_moves[i].first_position, temp_path.begin() + best_moves[i].second_position); //swap cities in vector
+                best_path = temp_path;
+                path = temp_path;
+
+                // cout << "progress =" << best_moves[i].progress << endl;
+                // best_path_cost = temp_path_cost - best_moves[i].progress;
+                best_path_cost = calculate_path_cost(best_path, weight_matrix);
+                path_cost = best_path_cost;
+                temp_path_cost = path_cost;
+
+                best_path_iteration_numb = iteration_counter;
+
+                PRD = (float)(path_cost - optimum_cost) * 100 / optimum_cost;
+                printf("%d\t%d\t%.2f%%\t ASPIRATION!\n", iteration_counter, path_cost, PRD);
+
+                break;
+            }
+        }
+        if(!is_progress_in_iteration){
+            for(int i = 0; i < number_of_moves_to_check; i++){
+                if (tabu_matrix[best_moves[i].second_position][best_moves[i].first_position] == 0)
+                {
+                    is_progress_in_iteration = true;
+                    tabu_matrix[best_moves[i].second_position][best_moves[i].first_position] = tabu_tenure;
+                    tabu_matrix[best_moves[i].first_position][best_moves[i].second_position] = tabu_tenure;
+                    iter_swap(temp_path.begin() + best_moves[i].first_position, temp_path.begin() + best_moves[i].second_position); //swap cities in vector
+
+                    path = temp_path;
+                    // cout << "temp_path_cost = " << temp_path_cost << "progress = " << best_moves[i].progress << endl;
+                    // temp_path_cost = temp_path_cost - best_moves[i].progress;
+                    temp_path_cost = calculate_path_cost(path, weight_matrix);
+                    path_cost = temp_path_cost;
+
+                    // PRD = (float)(path_cost - optimum_cost) * 100 / optimum_cost;
+                    // printf("%d\t%d\t%.2f%%\t\n", iteration_counter, path_cost, PRD);
+
+                    break;
+                }
+        }}
+
+
+        // if (!is_progress_in_iteration){
+        //     no_improvement_iteration_counter++;
+        //     cout << "no improvement iteration" << endl;
+        // }
+
+        // matrix_operations::print_path(temp_path);
+
+        // print_matrix(tabu_matrix);
+
         end = chrono::steady_clock::now();
         algorithm_duration_time = chrono::duration_cast<chrono::seconds>(end - begin).count();
+
+        // cout << "-------------" << endl;
+
+        // if(iteration_counter > 20){
+        //     cout << " ijsdaf";
+        //     break;
+        // }
+    
     }
+    // cout << "co jest it = " << iteration_counter << endl;
 
+    PRD = (float)(best_path_cost - optimum_cost) * 100 / optimum_cost;
+    printf("%d\t%d\t%.2f%%\t best \n", best_path_iteration_numb, best_path_cost, PRD);
 
-    matrix_operations::print_path(path);
+    PRD = (float)(first_path_cost - optimum_cost) * 100 / optimum_cost;
+    printf("%d\t%d\t%.2f%%\t first \n", 0, first_path_cost, PRD);
+    matrix_operations::print_path(temp_path);
+    // matrix_operations::print_path(path);
     return path_cost;
 }

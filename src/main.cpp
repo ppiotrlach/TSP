@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     string instancename;
     string temp;
     int amount_of_vertices, edge_weight, optimum_cost;
-    bool call_brute_force = false, call_bnb = false, call_simulated_annealing = true; //as default run simulated_annealing
+    bool call_brute_force = false, call_bnb = false, call_simulated_annealing = false, call_tabu_search = true; //as default run tabu_search algorithm
 
     if (argc > 1) //second argument = filename
     {
@@ -37,17 +37,26 @@ int main(int argc, char *argv[])
             call_brute_force = true;
             call_bnb = false;
             call_simulated_annealing = false;
+            call_tabu_search = false;
         }
         else if (arg2 == "bnb")
         {
             call_brute_force = false;
             call_bnb = true;
             call_simulated_annealing = false;
+            call_tabu_search = false;
         }
-        else{
+        else if(arg2 == "sa"){
             call_brute_force = false;
             call_bnb = false;
             call_simulated_annealing = true;
+            call_tabu_search = false;
+        }
+        else if(arg2 == "ts"){
+            call_brute_force = false;
+            call_bnb = false;
+            call_simulated_annealing = false;
+            call_tabu_search = true;
         }
     }
 
@@ -100,9 +109,16 @@ int main(int argc, char *argv[])
         cout << chrono::duration_cast<chrono::seconds>(end - begin).count() << "[s]" << endl;
     }
     else if(call_simulated_annealing){
-        // clock_t start;
         begin = chrono::steady_clock::now();
         tsp.simulated_annealing(graph.get_weight_matrix(), optimum_cost);
+        end = chrono::steady_clock::now();
+        cout << "optimum_cost = " << optimum_cost << endl << endl;
+        cout << "algorithm execution time = " << chrono::duration_cast<chrono::microseconds>(end - begin).count() << "[µs] = ";
+        cout << chrono::duration_cast<chrono::seconds>(end - begin).count() << "[s]" << endl;
+    }
+    else if(call_tabu_search){
+        begin = chrono::steady_clock::now();
+        tsp.tabu_search(graph.get_weight_matrix(), optimum_cost);
         end = chrono::steady_clock::now();
         cout << "optimum_cost = " << optimum_cost << endl << endl;
         cout << "algorithm execution time = " << chrono::duration_cast<chrono::microseconds>(end - begin).count() << "[µs] = ";
