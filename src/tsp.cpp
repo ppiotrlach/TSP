@@ -571,7 +571,6 @@ struct Move
     int progress = 0;
 };
 
-//TODO eliminate same pair of cities
 vector<Move> find_best_moves(int number_of_moves_to_check, vector<int> current_path, vector<vector<int>> weight_matrix, int current_path_cost)
 {
     int number_of_cities = weight_matrix[0].size();
@@ -642,14 +641,12 @@ int TSP::tabu_search(vector<vector<int>> weight_matrix, int optimum_cost)
     int iteration_counter = 0;
     int best_path_iteration_numb = 0;
 
-    // vector<int> path = create_random_path(number_of_cities); //create random path, first and last city is always 0
+    //vector<int> path = create_random_path(number_of_cities); //create random path, first and last city is always 0
     vector<int> path = create_nearest_neighbor_path(number_of_cities, weight_matrix);
     vector<int> temp_path = path;
 
     vector<int> best_path = path;
     path_cost = calculate_path_cost(path, weight_matrix);
-
-    cout << "1st path cost = " << path_cost << endl;
 
     int first_path_cost = path_cost;
     int best_path_cost = path_cost;
@@ -690,7 +687,6 @@ int TSP::tabu_search(vector<vector<int>> weight_matrix, int optimum_cost)
                 if (tabu_matrix[i][j] > 0)
                 {
                     tabu_matrix[i][j]--;
-                    // cout << "decreasing" << endl;
                 }
             }
         }
@@ -716,7 +712,7 @@ int TSP::tabu_search(vector<vector<int>> weight_matrix, int optimum_cost)
                 best_path_iteration_numb = iteration_counter;
 
                 PRD = (float)(path_cost - optimum_cost) * 100 / optimum_cost;
-                printf("%d\t%d\t%.2f%%\t ASPIRATION!\n", iteration_counter, path_cost, PRD);
+                printf("%d\t%d\t%.2f%%\t\n", iteration_counter, path_cost, PRD);
 
                 break;
             }
@@ -739,35 +735,30 @@ int TSP::tabu_search(vector<vector<int>> weight_matrix, int optimum_cost)
                     // PRD = (float)(path_cost - optimum_cost) * 100 / optimum_cost;
                     // printf("%d\t%d\t%.2f%%\t\n", iteration_counter, path_cost, PRD);
 
+                    no_improvement_iteration_counter++;
+
                     break;
                 }
         }}
 
-
-        // if (!is_progress_in_iteration){
-        //     no_improvement_iteration_counter++;
-        //     cout << "no improvement iteration" << endl;
-        // }
-
-        // matrix_operations::print_path(temp_path);
+        if (no_improvement_iteration_counter > pow(number_of_cities, 2) * 100)
+        {
+            path = create_random_path(number_of_cities); //shuffle
+            path_cost = calculate_path_cost(path, weight_matrix);
+            no_improvement_iteration_counter = 0;
+            cout << "path shuffled" << endl;
+            //matrix_operations::print_path(temp_path);
+        }
 
         // print_matrix(tabu_matrix);
 
         end = chrono::steady_clock::now();
         algorithm_duration_time = chrono::duration_cast<chrono::seconds>(end - begin).count();
-
-        // cout << "-------------" << endl;
-
-        // if(iteration_counter > 20){
-        //     cout << " ijsdaf";
-        //     break;
-        // }
-    
     }
-    // cout << "co jest it = " << iteration_counter << endl;
 
-    PRD = (float)(best_path_cost - optimum_cost) * 100 / optimum_cost;
-    printf("%d\t%d\t%.2f%%\t best \n", best_path_iteration_numb, best_path_cost, PRD);
+
+    // PRD = (float)(best_path_cost - optimum_cost) * 100 / optimum_cost;
+    // printf("%d\t%d\t%.2f%%\t best \n", best_path_iteration_numb, best_path_cost, PRD);
 
     PRD = (float)(first_path_cost - optimum_cost) * 100 / optimum_cost;
     printf("%d\t%d\t%.2f%%\t first \n", 0, first_path_cost, PRD);

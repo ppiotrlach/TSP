@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     if (argc > 2) //third arg, 'b' means run brute force
     {
         string arg2 = argv[2];
-        if (arg2 == "br")
+        if (arg2 == "bf")
         {
             call_brute_force = true;
             call_bnb = false;
