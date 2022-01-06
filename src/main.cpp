@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
             call_simulated_annealing = true;
             call_tabu_search = false;
         }
-        else if (arg2 == "ts" || arg2 == "tabu search")
+        else if (arg2 == "ts" || arg2 == "tabusearch")
         {
             call_brute_force = false;
             call_bnb = false;
