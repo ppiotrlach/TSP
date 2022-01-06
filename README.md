@@ -12,18 +12,21 @@ running:
 ```
 
 arg1 = instance name with extension f.e m6.atsp <br>
-arg2 = method_name: <br>
 
+<br>
+<br>
+
+arg2 = method_name: <br>
 
 - bf || bruteforce  runs brute_force algorithm 
 - bnb || branchandbound  runs branch_and_bound algorithm
 - sa || simulatedannealing  runs simulated_annealing algorithm
 - ts || tabusearch  runs tabu_search algorithm
-
 <br>
-
 **as default running tabu_search algorithm**
 
+<br>
+<br>
 
 
 
