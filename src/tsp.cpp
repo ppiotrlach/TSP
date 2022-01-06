@@ -441,6 +441,8 @@ int TSP::simulated_annealing(vector<vector<int>> weight_matrix, int optimum_cost
             start_temperature = temperature;
         }
 
+        
+
         int pos1_to_swap = get_random_int(1, number_of_cities - 2);
         int pos2_to_swap = get_random_int(1, number_of_cities - 2);
 
