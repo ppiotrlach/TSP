@@ -23,6 +23,7 @@ arg2 = method_name: <br>
 - sa || simulatedannealing  runs simulated_annealing algorithm
 - ts || tabusearch  runs tabu_search algorithm
 <br>
+
 **as default running tabu_search algorithm**
 
 <br>
