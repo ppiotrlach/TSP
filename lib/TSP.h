@@ -17,4 +17,5 @@ public:
     int branch_and_bound(vector<vector<int>> weight_matrix);
     int simulated_annealing(vector<vector<int>> weight_matrix, int optimum_cost, string initial_solution_method);
     int tabu_search(vector<vector<int>> weight_matrix, int optimum_cost, string initial_solution_method);
+    int genetic_algorithm(vector<vector<int>> weight_matrix, int optimum_cost, string initial_solution_method);
 };

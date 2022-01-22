@@ -11,6 +11,8 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+    cout << "cojes" << endl;
+
     Graph graph;
     TSP tsp;
     chrono::steady_clock::time_point begin, end;
@@ -20,7 +22,7 @@ int main(int argc, char *argv[])
     string instancename;
     string temp;
     int amount_of_vertices, edge_weight, optimum_cost;
-    bool call_brute_force = false, call_bnb = false, call_simulated_annealing = false, call_tabu_search = true; //as default run tabu_search algorithm
+    bool call_brute_force = false, call_bnb = false, call_simulated_annealing = false, call_tabu_search = false, call_genetic_algorithm = true; //as default run genetic_algorithm
 
     string initial_solution_method = "random"; //run random first solution by default
 
@@ -39,6 +41,7 @@ int main(int argc, char *argv[])
             call_bnb = false;
             call_simulated_annealing = false;
             call_tabu_search = false;
+            call_genetic_algorithm = false;
         }
         else if (arg2 == "bnb" || arg2 == "branchandbound")
         {
@@ -46,6 +49,7 @@ int main(int argc, char *argv[])
             call_bnb = true;
             call_simulated_annealing = false;
             call_tabu_search = false;
+            call_genetic_algorithm = false;
         }
         else if (arg2 == "sa" || arg2 == "simulatedannealing")
         {
@@ -53,6 +57,7 @@ int main(int argc, char *argv[])
             call_bnb = false;
             call_simulated_annealing = true;
             call_tabu_search = false;
+            call_genetic_algorithm = false;
         }
         else if (arg2 == "ts" || arg2 == "tabusearch")
         {
@@ -60,9 +65,18 @@ int main(int argc, char *argv[])
             call_bnb = false;
             call_simulated_annealing = false;
             call_tabu_search = true;
+            call_genetic_algorithm = false;
+        }
+        else if (arg2 == "ga" || arg2 == "genetic" || arg2 == "geneticalgorithm")
+        {
+            call_brute_force = false;
+            call_bnb = false;
+            call_simulated_annealing = false;
+            call_tabu_search = false;
+            call_genetic_algorithm = true;
         }
     }
-
+    cout << call_brute_force << call_bnb << call_simulated_annealing << call_tabu_search << call_genetic_algorithm << endl;
     if (argc > 3) //4th arg, 'b' means run brute force
     {
         string arg3 = argv[3];
@@ -70,74 +84,85 @@ int main(int argc, char *argv[])
         {
             initial_solution_method = "neighbours";
         }
+    }
+    ifstream file(filename);
+    string line;
 
-        ifstream file(filename);
-        string line;
+    if (file.is_open())
+    {
+        file >> instancename;
+        file >> amount_of_vertices;
 
-        if (file.is_open())
+        graph.set_amount_of_vertices(amount_of_vertices);
+
+        for (int i = 0; i < amount_of_vertices; i++)
         {
-            file >> instancename;
-            file >> amount_of_vertices;
-
-            graph.set_amount_of_vertices(amount_of_vertices);
-
-            for (int i = 0; i < amount_of_vertices; i++)
+            for (int j = 0; j < amount_of_vertices; j++)
             {
-                for (int j = 0; j < amount_of_vertices; j++)
-                {
-                    file >> edge_weight;
-                    graph.add_edge_to_matrix(i, j, edge_weight);
-                }
+                file >> edge_weight;
+                graph.add_edge_to_matrix(i, j, edge_weight);
             }
+        }
 
-            file >> optimum_cost;
-        }
-        else
-        {
-            cout << "Can not open file, restart the program and try again" << endl;
-            return -1;
-        }
-        file.close();
+        file >> optimum_cost;
+    }
+    else
+    {
+        cout << "Can not open file, restart the program and try again" << endl;
+        return -1;
+    }
+    file.close();
 
-        if (call_brute_force)
-        {
-            begin = chrono::steady_clock::now();
-            tsp.brute_force(graph, optimum_cost);
-            end = chrono::steady_clock::now();
-            cout << "optimum_cost = " << optimum_cost << endl
-                 << endl;
-            cout << "algorithm execution time = " << chrono::duration_cast<chrono::microseconds>(end - begin).count() << "[µs] = ";
-            cout << chrono::duration_cast<chrono::seconds>(end - begin).count() << "[s]" << endl;
-        }
-        else if (call_bnb)
-        {
-            begin = chrono::steady_clock::now();
-            tsp.branch_and_bound(graph.get_weight_matrix());
-            end = chrono::steady_clock::now();
-            cout << "optimum_cost = " << optimum_cost << endl
-                 << endl;
-            cout << "algorithm execution time = " << chrono::duration_cast<chrono::microseconds>(end - begin).count() << "[µs] = ";
-            cout << chrono::duration_cast<chrono::seconds>(end - begin).count() << "[s]" << endl;
-        }
-        else if (call_simulated_annealing)
-        {
-            begin = chrono::steady_clock::now();
-            tsp.simulated_annealing(graph.get_weight_matrix(), optimum_cost, initial_solution_method);
-            end = chrono::steady_clock::now();
-            cout << "optimum_cost = " << optimum_cost << endl
-                 << endl;
-            cout << "algorithm execution time = " << chrono::duration_cast<chrono::microseconds>(end - begin).count() << "[µs] = ";
-            cout << chrono::duration_cast<chrono::seconds>(end - begin).count() << "[s]" << endl;
-        }
-        else if (call_tabu_search)
-        {
-            begin = chrono::steady_clock::now();
-            tsp.tabu_search(graph.get_weight_matrix(), optimum_cost, initial_solution_method);
-            end = chrono::steady_clock::now();
-            cout << "optimum_cost = " << optimum_cost << endl
-                 << endl;
-            cout << "algorithm execution time = " << chrono::duration_cast<chrono::microseconds>(end - begin).count() << "[µs] = ";
-            cout << chrono::duration_cast<chrono::seconds>(end - begin).count() << "[s]" << endl;
-        }
+    cout << "cojest" << endl;
+
+    if (call_brute_force)
+    {
+        begin = chrono::steady_clock::now();
+        tsp.brute_force(graph, optimum_cost);
+        end = chrono::steady_clock::now();
+        cout << "optimum_cost = " << optimum_cost << endl
+             << endl;
+        cout << "algorithm execution time = " << chrono::duration_cast<chrono::microseconds>(end - begin).count() << "[µs] = ";
+        cout << chrono::duration_cast<chrono::seconds>(end - begin).count() << "[s]" << endl;
+    }
+    else if (call_bnb)
+    {
+        begin = chrono::steady_clock::now();
+        tsp.branch_and_bound(graph.get_weight_matrix());
+        end = chrono::steady_clock::now();
+        cout << "optimum_cost = " << optimum_cost << endl
+             << endl;
+        cout << "algorithm execution time = " << chrono::duration_cast<chrono::microseconds>(end - begin).count() << "[µs] = ";
+        cout << chrono::duration_cast<chrono::seconds>(end - begin).count() << "[s]" << endl;
+    }
+    else if (call_simulated_annealing)
+    {
+        begin = chrono::steady_clock::now();
+        tsp.simulated_annealing(graph.get_weight_matrix(), optimum_cost, initial_solution_method);
+        end = chrono::steady_clock::now();
+        cout << "optimum_cost = " << optimum_cost << endl
+             << endl;
+        cout << "algorithm execution time = " << chrono::duration_cast<chrono::microseconds>(end - begin).count() << "[µs] = ";
+        cout << chrono::duration_cast<chrono::seconds>(end - begin).count() << "[s]" << endl;
+    }
+    else if (call_tabu_search)
+    {
+        begin = chrono::steady_clock::now();
+        tsp.tabu_search(graph.get_weight_matrix(), optimum_cost, initial_solution_method);
+        end = chrono::steady_clock::now();
+        cout << "optimum_cost = " << optimum_cost << endl
+             << endl;
+        cout << "algorithm execution time = " << chrono::duration_cast<chrono::microseconds>(end - begin).count() << "[µs] = ";
+        cout << chrono::duration_cast<chrono::seconds>(end - begin).count() << "[s]" << endl;
+    }
+    else if (call_genetic_algorithm)
+    {
+        begin = chrono::steady_clock::now();
+        tsp.genetic_algorithm(graph.get_weight_matrix(), optimum_cost, initial_solution_method);
+        end = chrono::steady_clock::now();
+        cout << "optimum_cost = " << optimum_cost << endl
+             << endl;
+        cout << "algorithm execution time = " << chrono::duration_cast<chrono::microseconds>(end - begin).count() << "[µs] = ";
+        cout << chrono::duration_cast<chrono::seconds>(end - begin).count() << "[s]" << endl;
     }
 }

@@ -441,8 +441,6 @@ int TSP::simulated_annealing(vector<vector<int>> weight_matrix, int optimum_cost
             start_temperature = temperature;
         }
 
-        
-
         int pos1_to_swap = get_random_int(1, number_of_cities - 2);
         int pos2_to_swap = get_random_int(1, number_of_cities - 2);
 
@@ -720,4 +718,186 @@ int TSP::tabu_search(vector<vector<int>> weight_matrix, int optimum_cost, string
     printf("%d\t%d\t%.2f%%\t first \n", 0, first_path_cost, PRD);
     matrix_operations::print_path(temp_path);
     return path_cost;
+}
+
+struct Path //individual (chromosome)
+{
+    vector<int> path;
+    int cost = 0;
+
+    Path(vector<int> &path, int cost)
+    {
+        this->cost = cost;
+        this->path = path;
+    }
+
+    bool operator<(const Path &str) const //for the sort method
+    {
+        return (cost < str.cost);
+    }
+};
+
+int TSP::genetic_algorithm(vector<vector<int>> weight_matrix, int optimum_cost, string initial_solution_method)
+{
+
+    srand(time(NULL)); // Seed the time
+
+    const int POPULATION_SIZE = 1000;
+    const int ELITE_SIZE = 30;
+    const int NUMBER_OF_GENERATIONS = 400000;
+    const float MUTATION_CHANCE = 0.04;
+
+    const int CHROMOSOME_SIZE = weight_matrix[0].size(); //number of cities, city = gene
+
+    chrono::steady_clock::time_point begin, end;
+    int algorithm_duration_time = 0;
+    begin = chrono::steady_clock::now();
+
+    vector<Path> population;
+
+    for (int i = 0; i < POPULATION_SIZE; i++)
+    {
+
+        vector<int> chromosome = create_random_path(CHROMOSOME_SIZE); //chromosome contains genes, chromosome = path
+        population.push_back(Path(chromosome, calculate_path_cost(chromosome, weight_matrix)));
+    }
+
+    int best_path_cost = population.at(0).cost; //fittest chromosome cost
+    int first_path_cost = best_path_cost;
+    vector<int> best_path;
+
+    double PRD = (first_path_cost - optimum_cost) * 100 / optimum_cost;
+    printf("S\t%d\t%.2f%%\n", first_path_cost, PRD);
+
+    for (int i = 0; i < NUMBER_OF_GENERATIONS; i++)
+    {
+        // cout<<"iteration_start"<<endl;
+        if(algorithm_duration_time >= 60) break;
+
+        sort(population.begin(), population.end()); //sorting ascending by the cost
+        if (population.at(0).cost < best_path_cost)
+        {
+            best_path_cost = population.at(0).cost;
+            best_path = population.at(0).path;
+            PRD = (best_path_cost - optimum_cost) * 100 / optimum_cost;
+            printf("%d\t%d\t%.2f%%\n", i, best_path_cost, PRD);
+        }
+
+        vector<Path> mating_pool;
+
+        //survival of the fittest
+        for (int i = 0; i < ELITE_SIZE; i++)
+        {
+            mating_pool.push_back(population.at(i));
+        }
+
+        //genetic crossover of individuals
+        while (mating_pool.size() < ELITE_SIZE)
+        {
+            //find random positions
+            int pos1 = get_random_int(1, CHROMOSOME_SIZE - 2);
+            int pos2 = get_random_int(1, CHROMOSOME_SIZE - 2);
+
+            //make sure positions are different
+            while (pos1 == pos2)
+                pos2 = get_random_int(1, CHROMOSOME_SIZE - 2);
+
+            if (pos1 > pos2)
+            {
+                int buff = pos1;
+                pos1 = pos2;
+                pos2 = buff;
+            }
+
+            // cout << "pos1 = " << pos1 << " , pos2 = " << pos2 << endl;
+            //get random parents
+            vector<int> random_elite_chromosome1 = mating_pool.at(get_random_int(0, mating_pool.size() - 1)).path;
+            vector<int> random_elite_chromosome2 = mating_pool.at(get_random_int(0, mating_pool.size() - 1)).path;
+
+            // matrix_operations::print_path(random_elite_chromosome1);
+            // matrix_operations::print_path(random_elite_chromosome2);
+
+            //make sure parents are different
+            while (random_elite_chromosome1 == random_elite_chromosome2)
+                random_elite_chromosome2 = mating_pool.at(get_random_int(0, mating_pool.size() - 1)).path;
+
+            vector<int> elite_chromosome_descendant1;
+            vector<int> elite_chromosome_descendant2;
+
+            elite_chromosome_descendant1.push_back(0);
+            elite_chromosome_descendant2.push_back(0);
+
+            //give the children a randomized string of genes
+            for (int i = pos1; i <= pos2; i++)
+            {
+                elite_chromosome_descendant1.push_back(random_elite_chromosome1[i]);
+                elite_chromosome_descendant2.push_back(random_elite_chromosome2[i]);
+            }
+
+            //give the children the remaining genes from the other parent (index from 1 because first and last gene is always 0)
+            for (int i = 1; i < CHROMOSOME_SIZE; i++)
+            {
+                if (find(elite_chromosome_descendant1.begin(), elite_chromosome_descendant1.end(), random_elite_chromosome2.at(i)) == elite_chromosome_descendant1.end())
+                    elite_chromosome_descendant1.push_back(random_elite_chromosome2[i]);
+                if (find(elite_chromosome_descendant2.begin(), elite_chromosome_descendant2.end(), random_elite_chromosome1.at(i)) == elite_chromosome_descendant2.end())
+                    elite_chromosome_descendant2.push_back(random_elite_chromosome1[i]);
+            }
+
+            elite_chromosome_descendant1.push_back(0);
+            elite_chromosome_descendant2.push_back(0);
+
+            // matrix_operations::print_path(elite_chromosome_descendant1);
+            // matrix_operations::print_path(elite_chromosome_descendant2);
+            mating_pool.push_back(Path(elite_chromosome_descendant1, calculate_path_cost(elite_chromosome_descendant1, weight_matrix)));
+            mating_pool.push_back(Path(elite_chromosome_descendant2, calculate_path_cost(elite_chromosome_descendant2, weight_matrix)));
+        }
+
+        //mutation
+        for (int i = 0; i < ELITE_SIZE; i++)
+        {
+            if (get_random_probability() <= MUTATION_CHANCE)
+            {
+                int pos1_to_swap = get_random_int(1, CHROMOSOME_SIZE - 2); //gene index
+                int pos2_to_swap = get_random_int(1, CHROMOSOME_SIZE - 2);
+
+                while (pos1_to_swap == pos2_to_swap)
+                {
+                    pos2_to_swap = get_random_int(1, CHROMOSOME_SIZE - 2);
+                }
+                vector<int> chromosome_before_mutation = mating_pool[i].path;
+                iter_swap(mating_pool[i].path.begin() + pos1_to_swap, mating_pool[i].path.begin() + pos2_to_swap); //swap cities in vector
+
+                int new_path_cost = calculate_path_cost(mating_pool[i].cost, chromosome_before_mutation, mating_pool[i].path, weight_matrix, pos1_to_swap, pos2_to_swap);
+                mating_pool[i].cost = new_path_cost;
+
+                // cout<<"mutation"<<endl;
+            }
+        }
+
+        population = mating_pool;
+        // mating_pool.clear();
+        // if (iteration_counter > 5)break;
+
+        end = chrono::steady_clock::now();
+        algorithm_duration_time = chrono::duration_cast<chrono::seconds>(end - begin).count();
+        // cout<<"iteration_end"<<endl;
+    }
+
+    sort(population.begin(), population.end()); //sorting ascending by the cost
+    
+
+    PRD = (first_path_cost - optimum_cost) * 100 / optimum_cost;
+    printf("%d\t%d\t%.2f%%\n", 0, first_path_cost, PRD);
+
+    if(best_path_cost > population.at(0).cost){
+        best_path_cost = population.at(0).cost;
+        best_path = population.at(0).path;
+    }
+
+    PRD = (best_path_cost - optimum_cost) * 100 / optimum_cost;
+    printf("%d\t%d\t%.2f%%\n", NUMBER_OF_GENERATIONS, best_path_cost, PRD);
+
+    matrix_operations::print_path(best_path);
+
+    return best_path_cost;
 }
