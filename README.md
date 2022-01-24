@@ -31,7 +31,7 @@ arg2 = method_name: <br>
 <br>
 arg3 = initial_solution <br>
 -  n || neighbours || neighbour runs nearest neighborhood initial solution for ts and sa algorithms <br>
--  everything else runs nearest neighborhood initial solution for ts and sa algorithms <br>
+-  everything else runs random initial solution <br>
 
 **only relevant for sa and ts algorigthm, as default running random initial solution**
 
