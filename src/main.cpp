@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     TSP tsp;
     chrono::steady_clock::time_point begin, end;
 
-    string filename = "instances/m9.atsp";
+    string filename = "../instances/gr48.tsp";
 
     string instancename;
     string temp;
