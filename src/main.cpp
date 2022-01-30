@@ -11,7 +11,6 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    cout << "cojes" << endl;
 
     Graph graph;
     TSP tsp;
@@ -76,7 +75,7 @@ int main(int argc, char *argv[])
             call_genetic_algorithm = true;
         }
     }
-    cout << call_brute_force << call_bnb << call_simulated_annealing << call_tabu_search << call_genetic_algorithm << endl;
+
     if (argc > 3) //4th arg, 'b' means run brute force
     {
         string arg3 = argv[3];
@@ -112,8 +111,6 @@ int main(int argc, char *argv[])
         return -1;
     }
     file.close();
-
-    cout << "cojest" << endl;
 
     if (call_brute_force)
     {
